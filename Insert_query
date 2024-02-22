@@ -1,0 +1,82 @@
+-- Заполняем таблицу track:
+
+INSERT INTO Track (track_id, title, duration, album_id) VALUES
+(401, 'Titanium (feat. Sia)', '245 seconds', 12),
+(402, 'She Wolf (Falling to Pieces) [feat. Sia]', '287 seconds', 12),
+(403, 'Кто как играет', '199 seconds', 13),
+(404, 'Трамвайные пути', '137 seconds', 13),
+(405, 'Marry the Night', '264 seconds', 15),
+(406, 'Government Hooker', '254 seconds', 15),
+(407, 'What I''ve Done', '205 seconds', 14),
+(408, 'Bleed It Out', '164 seconds', 14),
+(409, 'In My Head (feat. Nervo)', '231 seconds', 12),
+(410, 'First class', '90 seconds', 16);
+
+
+-- Заполняем таблицу album:
+
+INSERT INTO Album (album_id, title, release_year)
+VALUES
+    (12, 'Nothing But The Beat (Ultimate Edition)', 2011),
+    (13, 'Город дорог', 2007),
+    (14, 'Minutes to Midnight', 2007),
+    (15, 'Born This Way', 2011),
+    (16, 'Mordechai', 2020);
+   
+-- Заполняем таблицу albumartist:
+   
+INSERT INTO AlbumArtist (album_id, artist_id)
+VALUES
+    (12, 101),
+    (13, 102),
+    (14, 103),
+    (15, 104),
+    (16, 105);
+
+-- Заполняем таблицу artist:
+
+INSERT INTO Artist (artist_id, name)
+VALUES
+    (201, 'David Guetta'),
+    (202, 'Guf'),
+    (203, 'Linkin Park'),
+    (204, 'Lady Gaga'),
+    (205, 'Khruangbin'); 
+
+-- Заполняем таблицу artistgenre:
+   
+INSERT INTO ArtistGenre (artist_id, genre_id)
+VALUES
+    (201, 301),
+    (202, 302),
+    (203, 307),
+    (204, 304),
+    (201, 304);
+
+-- Заполняем таблицу genre:
+   
+INSERT INTO Genre (genre_id, name) VALUES (301, 'house');
+INSERT INTO Genre (genre_id, name) VALUES (302, 'rap');
+INSERT INTO Genre (genre_id, name) VALUES (303, 'rock');
+INSERT INTO Genre (genre_id, name) VALUES (304, 'pop');
+INSERT INTO Genre (genre_id, name) VALUES (305, 'jazz');
+INSERT INTO Genre (genre_id, name) VALUES (306, 'classical');
+INSERT INTO Genre (genre_id, name) VALUES (307, 'heavy metal');
+INSERT INTO Genre (genre_id, name) VALUES (308, 'opera');
+   
+-- Заполняем таблицу compilation:
+
+INSERT INTO Compilation (compilation_id, title, release_year) VALUES (501, 'Greatest Hits', 2018);
+INSERT INTO Compilation (compilation_id, title, release_year) VALUES (502, 'Хиты танцполов', 2011);
+INSERT INTO Compilation (compilation_id, title, release_year) VALUES (504, 'Танцевальные хиты', 2016);
+INSERT INTO Compilation (compilation_id, title, release_year) VALUES (505, 'Только хиты', 2020);
+INSERT INTO Compilation (compilation_id, title, release_year) VALUES (506, 'Non stop hits', 2021);
+   
+-- Заполняем таблицу compilationtrack:
+
+INSERT INTO CompilationTrack (compilation_id, track_id) VALUES (501, 401);
+INSERT INTO CompilationTrack (compilation_id, track_id) VALUES (505, 405);
+INSERT INTO CompilationTrack (compilation_id, track_id) VALUES (505, 408);
+INSERT INTO CompilationTrack (compilation_id, track_id) VALUES (506, 406);
+INSERT INTO CompilationTrack (compilation_id, track_id) VALUES (501, 403);
+INSERT INTO CompilationTrack (compilation_id, track_id) VALUES (506, 401);
