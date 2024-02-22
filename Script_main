@@ -1,0 +1,67 @@
+-- Таблица Жанры
+CREATE TABLE Genre (
+    genre_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+);
+
+ALTER TABLE Genre ADD CONSTRAINT unique_name UNIQUE (name);
+
+
+-- Таблица Исполнители
+CREATE TABLE Artist (
+    artist_id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL
+);
+
+-- Таблица Жанры исполнителей (многие ко многим)
+CREATE TABLE ArtistGenre (
+    artist_id INT REFERENCES Artist(artist_id),
+    genre_id INT REFERENCES Genre(genre_id),
+    PRIMARY KEY (artist_id, genre_id)
+);
+
+-- Таблица Альбомы
+CREATE TABLE Album (
+    album_id SERIAL PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    release_year INT
+);
+
+ALTER TABLE Album ADD CONSTRAINT check_release_year CHECK (release_year >= 1900);
+
+
+-- Таблица Исполнители альбомов (многие ко многим)
+CREATE TABLE AlbumArtist (
+    album_id INT REFERENCES Album(album_id),
+    artist_id INT REFERENCES Artist(artist_id),
+    PRIMARY KEY (album_id, artist_id)
+);
+
+-- Таблица Треки
+CREATE TABLE Track (
+    track_id SERIAL PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    duration INTERVAL NOT NULL,
+    album_id INT REFERENCES Album(album_id)
+);
+
+-- Удаляем столбец duration
+ALTER TABLE Track DROP COLUMN duration;
+
+-- Создаем новый столбец duration_seconds типа INTEGER
+ALTER TABLE Track ADD COLUMN duration_seconds INTEGER NOT NULL;
+
+
+-- Таблица Сборники
+CREATE TABLE Compilation (
+    compilation_id SERIAL PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    release_year INT
+);
+
+-- Таблица Треки сборника (многие ко многим)
+CREATE TABLE CompilationTrack (
+    compilation_id INT REFERENCES Compilation(compilation_id),
+    track_id INT REFERENCES Track(track_id),
+    PRIMARY KEY (compilation_id, track_id)
+);
