@@ -1,0 +1,107 @@
+
+-- Название треков, продолжительность которых не менее 3,5 минут:
+
+SELECT title
+FROM Track
+WHERE duration >= '210';
+
+-- Название и продолжительность самого длительного трека:
+
+SELECT title, duration
+FROM Track
+WHERE duration = (SELECT MAX(duration) FROM Track);
+
+-- Названия сборников, вышедших в период с 2018 по 2020 год включительно:
+
+SELECT title
+FROM Compilation
+WHERE release_year BETWEEN 2018 AND 2020;
+
+-- Исполнители, чьё имя состоит из одного слова:
+
+SELECT name
+FROM Artist
+WHERE name NOT LIKE '% %';
+
+-- Название треков, которые содержат слово «мой» или «my»:
+
+SELECT title
+FROM Track
+WHERE title ILIKE '%мой%' OR title ILIKE '%my%';
+
+-- Количество исполнителей в каждом жанре:
+
+SELECT g.name AS genre, COUNT(ag.artist_id) AS num_artists
+FROM Genre g
+LEFT JOIN ArtistGenre ag ON g.genre_id = ag.genre_id
+GROUP BY g.name;
+
+-- Количество треков, вошедших в альбомы 2019–2020 годов:
+
+SELECT COUNT(*) AS num_tracks
+FROM Track t
+JOIN Album a ON t.album_id = a.album_id
+WHERE a.release_year BETWEEN 2019 AND 2020;
+
+-- Средняя продолжительность треков по каждому альбому:
+
+SELECT a.title AS album_title, AVG(t.duration) AS avg_duration_seconds
+FROM Track t
+JOIN Album a ON t.album_id = a.album_id
+GROUP BY a.title;
+
+-- Все исполнители, которые не выпустили альбомы в 2020 году:
+
+SELECT DISTINCT ar.name AS artist_name
+FROM Artist ar
+LEFT JOIN AlbumArtist aa ON ar.artist_id = aa.artist_id
+LEFT JOIN Album a ON aa.album_id = a.album_id
+WHERE a.release_year <> 2020 OR a.release_year IS NULL;
+
+-- Названия сборников, в которых присутствует конкретный исполнитель (выберите его сами) пусь будет David Guetta:
+
+SELECT c.title AS compilation_title
+FROM Compilation c
+JOIN CompilationTrack ct ON c.compilation_id = ct.compilation_id
+JOIN Track t ON ct.track_id = t.track_id
+JOIN Album a ON t.album_id = a.album_id
+JOIN AlbumArtist aa ON a.album_id = aa.album_id
+WHERE aa.artist_id = 201;
+
+-- Названия альбомов, в которых присутствуют исполнители более чем одного жанра.
+-- выдаёт всегда пустой ответ поскольку артист выступает альбом всегда в одном жанре (так вышло при формировании базы)
+-- можно сделать такой запрос для сборников
+
+SELECT DISTINCT a.title AS album_title
+FROM Album a
+JOIN AlbumArtist aa ON a.album_id = aa.album_id
+JOIN ArtistGenre ag ON aa.artist_id = ag.artist_id
+GROUP BY a.album_id, a.title
+HAVING COUNT(DISTINCT ag.genre_id) > 1;
+
+-- Наименования треков, которые не входят в сборники:
+
+SELECT t.title AS track_title
+FROM Track t
+LEFT JOIN CompilationTrack ct ON t.track_id = ct.track_id
+WHERE ct.track_id IS NULL;
+
+-- Исполнитель или исполнители, написавшие самый короткий по продолжительности трек:
+
+SELECT DISTINCT a.name AS artist_name
+FROM Track t
+JOIN AlbumArtist aa ON t.album_id = aa.album_id
+JOIN Artist a ON aa.artist_id = a.artist_id
+WHERE t.duration = (SELECT MIN(duration) FROM Track);
+
+-- Названия альбомов, содержащих наименьшее количество треков.
+
+SELECT a.title AS album_title
+FROM Album a
+JOIN (
+    SELECT album_id, COUNT(*) AS track_count
+    FROM Track
+    GROUP BY album_id
+    ORDER BY track_count
+    LIMIT 1
+) AS min_tracks ON a.album_id = min_tracks.album_id;
